@@ -20,7 +20,7 @@ abstract class Application
      *
      * @var string
      */
-    protected $namespace;
+    protected string $namespace;
 
     /**
      * The file path for the application.
@@ -41,28 +41,28 @@ abstract class Application
      *
      * @var bool
      */
-    protected $booted = false;
+    protected bool $booted = false;
 
     /**
      * Hook for booting the providers and application.
      *
      * @var string
      */
-    protected $boot_hook = 'after_setup_theme';
+    protected string $boot_hook = 'after_setup_theme';
 
     /**
      * The providers required by the application.
      *
      * @var array
      */
-    protected $providers = [];
+    protected array $providers = [];
 
     /**
      * The deferred providers required by the application.
      *
      * @var array
      */
-    protected $deferred_providers = [
+    protected array $deferred_providers = [
         'acf' => AcfServiceProvider::class,
         'admin' => AdminServiceProvider::class
     ];
@@ -72,7 +72,7 @@ abstract class Application
      *
      * @var ServiceProvider[]
      */
-    protected $loaded_providers = [];
+    protected array $loaded_providers = [];
 
     /**
      * Create a new application instance.
@@ -195,11 +195,12 @@ abstract class Application
     /**
      * Register a provider with the application.
      *
+     * @param string $alias
      * @param ServiceProvider|string $provider
      * @param bool $force
-     * @return Module
+     * @return ServiceProvider
      */
-    public function register_provider(string $alias, ServiceProvider|string $provider, $force = false)
+    public function register_provider(string $alias, ServiceProvider|string $provider, bool $force = false)
     {
         if (($registered = $this->loaded_providers[$alias] ?? null) && !$force) {
             return $registered;
@@ -228,7 +229,7 @@ abstract class Application
 
     /**
      * Add providers to the application.
-     * 
+     *
      * @return self
      */
     public function add_providers(array $providers): self
@@ -240,7 +241,7 @@ abstract class Application
 
     /**
      * Add deferred providers to the application.
-     * 
+     *
      * @return self
      */
     public function add_deffered_providers(array $deferred_providers): self
@@ -256,7 +257,7 @@ abstract class Application
      * @param string $name
      * @return void
      */
-    public function __get(string $alias)
+    public function __get(string $alias): ServiceProvider
     {
         if (array_key_exists($alias, $this->providers)) {
             return $this->register_provider($alias, $this->providers[$alias]);
