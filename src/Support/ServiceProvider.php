@@ -12,23 +12,16 @@ abstract class ServiceProvider
 
     /**
      * The application instance.
-     *
-     * @var Application
      */
     protected Application $app;
 
     /**
      * The service provider alias.
-     *
-     * @var string
      */
     protected string $alias;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param Application $app
-     * @return void
      */
     public function __construct(string $alias, Application $app)
     {
@@ -37,9 +30,7 @@ abstract class ServiceProvider
     }
 
     /**
-     * Register any application services.
-     *
-     * @return void
+     * Register service providers.
      */
     public function register(): void
     {
@@ -47,9 +38,7 @@ abstract class ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
+     * Bootstrap service provider.
      */
     public function boot(): void
     {
@@ -58,10 +47,6 @@ abstract class ServiceProvider
 
     /**
      * Get service provider namespace.
-     *
-     * @param string $path
-     * @param string $separator
-     * @return string
      */
     public function get_namespace(string $path = '', string $separator = '/'): string
     {

@@ -4,20 +4,14 @@ namespace Sitepilot\WpFramework\Traits;
 
 trait HasAttributes
 {
-    /**
-     * The available attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
-     * Get an attribute from the model.
+     * Get attribute value.
      *
-     * @param  string  $key
-     * @return mixed    
+     * @return mixed
      */
-    public function get_attribute($key)
+    public function get_attribute(string $key)
     {
         if (!$key) {
             return;
@@ -44,10 +38,8 @@ trait HasAttributes
 
     /**
      * Get all of the current attributes on the model.
-     *
-     * @return array
      */
-    public function get_attributes()
+    public function get_attributes(): array
     {
         return $this->attributes;
     }
@@ -55,10 +47,9 @@ trait HasAttributes
     /**
      * Get a plain attribute (not a relationship).
      *
-     * @param  string  $key
      * @return mixed
      */
-    public function get_attribute_value($key)
+    public function get_attribute_value(string $key)
     {
         return $this->transform_model_value($key, $this->get_attribute_from_array($key));
     }
@@ -66,10 +57,9 @@ trait HasAttributes
     /**
      * Get an attribute from the $attributes array.
      *
-     * @param  string  $key
      * @return mixed
      */
-    protected function get_attribute_from_array($key)
+    protected function get_attribute_from_array(string $key)
     {
         return $this->get_attributes()[$key] ?? null;
     }
@@ -77,11 +67,10 @@ trait HasAttributes
     /**
      * Transform a raw model value using mutators, casts, etc.
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param mixed $value
      * @return mixed
      */
-    protected function transform_model_value($key, $value)
+    protected function transform_model_value(string $key, $value)
     {
         // If the attribute has a get mutator, we will call that then return what
         // it returns as the value, which is useful for transforming values on
@@ -96,22 +85,18 @@ trait HasAttributes
     /**
      * Get the value of an attribute using its mutator.
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param mixed $value
      * @return mixed
      */
-    protected function mutate_attribute($key, $value)
+    protected function mutate_attribute(string $key, $value)
     {
         return $this->{'get_' . strtolower($key) . '_attribute'}($value);
     }
 
     /**
      * Determine if a get mutator exists for an attribute.
-     *
-     * @param  string  $key
-     * @return bool
      */
-    public function has_get_mutator($key)
+    public function has_get_mutator(string $key): bool
     {
         return method_exists($this, 'get_' . strtolower($key) . '_attribute');
     }
@@ -119,10 +104,9 @@ trait HasAttributes
     /**
      * Dynamically retrieve attributes.
      *
-     * @param  string  $key
      * @return mixed
      */
-    public function __get($key)
+    public function __get(string $key)
     {
         return $this->get_attribute($key);
     }

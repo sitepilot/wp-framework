@@ -17,50 +17,36 @@ abstract class Application
 
     /**
      * The namespace for the application.
-     *
-     * @var string
      */
     protected string $namespace;
 
     /**
      * The file path for the application.
-     *
-     * @var string
      */
     public string $file;
 
     /**
      * The base path for the application.
-     *
-     * @var string
      */
     protected string $path;
 
     /**
      * Indicates if the application has "booted".
-     *
-     * @var bool
      */
     protected bool $booted = false;
 
     /**
      * Hook for booting the providers and application.
-     *
-     * @var string
      */
     protected string $boot_hook = 'after_setup_theme';
 
     /**
      * The providers required by the application.
-     *
-     * @var array
      */
     protected array $providers = [];
 
     /**
      * The deferred providers required by the application.
-     *
-     * @var array
      */
     protected array $deferred_providers = [
         'acf' => AcfServiceProvider::class,
@@ -76,9 +62,6 @@ abstract class Application
 
     /**
      * Create a new application instance.
-     *
-     * @param  string|null $basePath
-     * @return void
      */
     public function __construct(string $namespace, string $file)
     {
@@ -104,8 +87,6 @@ abstract class Application
 
     /**
      * Register application services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -114,8 +95,6 @@ abstract class Application
 
     /**
      * Bootstrap application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -124,8 +103,6 @@ abstract class Application
 
     /**
      * Boot application and service providers.
-     *
-     * @return void
      */
     public function boot_application(): void
     {
@@ -147,8 +124,6 @@ abstract class Application
 
     /**
      * Returns the application version.
-     *
-     * @return string
      */
     public function get_version(): string
     {
@@ -157,8 +132,6 @@ abstract class Application
 
     /**
      * Returns the plugin script version.
-     *
-     * @return string
      */
     public function get_script_version(): string
     {
@@ -173,8 +146,6 @@ abstract class Application
 
     /**
      * Get the application namespace.
-     *
-     * @return string
      */
     public function get_namespace($path = '', $separator = '/'): string
     {
@@ -183,9 +154,6 @@ abstract class Application
 
     /**
      * Get path to the application.
-     *
-     * @param string $path
-     * @return string
      */
     public function get_path(string $path = ''): string
     {
@@ -195,12 +163,9 @@ abstract class Application
     /**
      * Register a provider with the application.
      *
-     * @param string $alias
      * @param ServiceProvider|string $provider
-     * @param bool $force
-     * @return ServiceProvider
      */
-    public function register_provider(string $alias, ServiceProvider|string $provider, bool $force = false)
+    public function register_provider(string $alias, $provider, bool $force = false): ServiceProvider
     {
         if (($registered = $this->loaded_providers[$alias] ?? null) && !$force) {
             return $registered;
@@ -229,8 +194,6 @@ abstract class Application
 
     /**
      * Add providers to the application.
-     *
-     * @return self
      */
     public function add_providers(array $providers): self
     {
@@ -241,8 +204,6 @@ abstract class Application
 
     /**
      * Add deferred providers to the application.
-     *
-     * @return self
      */
     public function add_deffered_providers(array $deferred_providers): self
     {
@@ -252,10 +213,7 @@ abstract class Application
     }
 
     /**
-     * Get provider.
-     *
-     * @param string $name
-     * @return void
+     * Dynamically retrieve provider by alias.
      */
     public function __get(string $alias): ServiceProvider
     {

@@ -9,9 +9,8 @@ class AcfServiceProvider extends ServiceProvider
     /**
      * Get option value.
      *
-     * @param string $key
      * @param mixed $default
-     * @return mixed|null
+     * @return mixed
      */
     public function option(string $key, $default = null)
     {
@@ -25,12 +24,10 @@ class AcfServiceProvider extends ServiceProvider
     /**
      * Get field value.
      *
-     * @param string $key
      * @param mixed $default
-     * @param integer $post_id
-     * @return mixed|null
+     * @return mixed
      */
-    public function field(string $key, $default = null, $post_id = false)
+    public function field(string $key, $default = null, int $post_id = 0)
     {
         if (function_exists('get_field')) {
             return get_field($key, $post_id) ?: $default;
@@ -42,23 +39,18 @@ class AcfServiceProvider extends ServiceProvider
     /**
      * Get mapped field value.
      *
-     * @param string $key
-     * @param array $map
-     * @param string|null $default
-     * @return void
+     * @param mixed $default
+     * @return mixed
      */
-    function map_field(string $key, array $map, string $default = null): string
+    function map_field(string $key, array $map, $default = null)
     {
         return $map[$this->field($key, $default)] ?? '';
     }
 
     /**
      * Add option page.
-     * 
-     * @see https://www.advancedcustomfields.com/resources/options-page/
      *
-     * @param array $config
-     * @return void 
+     * @see https://www.advancedcustomfields.com/resources/options-page/
      */
     public function add_option_page(array $config): void
     {
@@ -69,11 +61,8 @@ class AcfServiceProvider extends ServiceProvider
 
     /**
      * Add sub option page.
-     * 
-     * @see https://www.advancedcustomfields.com/resources/options-page/
      *
-     * @param array $config
-     * @return void 
+     * @see https://www.advancedcustomfields.com/resources/options-page/
      */
     public function add_sub_option_page(array $config): void
     {
@@ -84,13 +73,8 @@ class AcfServiceProvider extends ServiceProvider
 
     /**
      * Add option page fields.
-     *
-     * @param string $slug
-     * @param string $title
-     * @param array $fields
-     * @return void
      */
-    public function add_option_page_fields(string $slug, string $title, array $fields = [])
+    public function add_option_page_fields(string $slug, string $title, array $fields = []): void
     {
         foreach ($fields as &$field) {
             $field['key'] = $this->format_key($slug . '_' . $field['name'] ?? '');
@@ -117,14 +101,9 @@ class AcfServiceProvider extends ServiceProvider
     }
 
     /**
-     * Add theme block.
-     * 
-     * @see https://www.advancedcustomfields.com/resources/acf_register_block_type/
+     * Register block to ACF.
      *
-     * @param string $name
-     * @param array $block
-     * @param array $fields
-     * @return void
+     * @see https://www.advancedcustomfields.com/resources/acf_register_block_type/
      */
     public function add_block(array $block): void
     {
@@ -150,10 +129,6 @@ class AcfServiceProvider extends ServiceProvider
      * Add block fields.
      *
      * @see https://www.advancedcustomfields.com/resources/register-fields-via-php/
-     * 
-     * @param string $name
-     * @param array $fields
-     * @return void
      */
     public function add_block_fields(string $name, array $fields): void
     {
@@ -184,10 +159,6 @@ class AcfServiceProvider extends ServiceProvider
 
     /**
      * Get block attributes.
-     *
-     * @param array $block
-     * @param array $classes
-     * @return string
      */
     public function get_block_attributes(array $block, array $classes = array()): string
     {
@@ -229,9 +200,6 @@ class AcfServiceProvider extends ServiceProvider
 
     /**
      * Get block style.
-     *
-     * @param array $block
-     * @return string
      */
     public function get_block_style(array $block): string
     {
@@ -245,11 +213,7 @@ class AcfServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get block classes.
-     *
-     * @param array $block
-     * @param array $classes
-     * @return array
+     * Get block classes by block style.
      */
     public function get_block_classes(array $block, array $classes): array
     {
@@ -274,7 +238,6 @@ class AcfServiceProvider extends ServiceProvider
      * @param array $allowed_blocks An array of block names that restricted the types of content that can be inserted.
      * @param array $template A structured array of block content as documented in the CPT block template guide.
      * @param string $lock Locks the template content, vailable settings are "all" or "insert".
-     * @return string
      */
     public function get_inner_blocks_html(array $allowed_blocks = [], array $template = [], string $lock = ''): string
     {
@@ -296,7 +259,7 @@ class AcfServiceProvider extends ServiceProvider
     }
 
     /**
-     * Format key.
+     * Format field / group key.
      *
      * @param string $key
      * @return string

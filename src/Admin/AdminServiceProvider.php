@@ -9,12 +9,10 @@ class AdminServiceProvider extends ServiceProvider
 {
     /**
      * Add admin bar node.
-     * 
-     * @see https://developer.wordpress.org/reference/classes/wp_admin_bar/add_node/
      *
-     * @return void
+     * @see https://developer.wordpress.org/reference/classes/wp_admin_bar/add_node/
      */
-    public function add_admin_bar_node(array $node)
+    public function add_admin_bar_node(array $node): void
     {
         add_action('admin_bar_menu', function (WP_Admin_Bar $admin_bar) use ($node) {
             $admin_bar->add_node($node);
@@ -23,10 +21,8 @@ class AdminServiceProvider extends ServiceProvider
 
     /**
      * Add admin notice.
-     * 
+     *
      * @see https://developer.wordpress.org/reference/hooks/admin_notices/
-     * 
-     * @return void
      */
     public function add_notice(string $message, string $type = 'info', bool $dismissable = false): void
     {

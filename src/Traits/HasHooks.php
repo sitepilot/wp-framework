@@ -6,11 +6,8 @@ trait HasHooks
 {
     /**
      * Get namespaced hook name.
-     *
-     * @param string $hook
-     * @return void
      */
-    public function get_hook(string $hook)
+    public function get_hook(string $hook): string
     {
         if (method_exists($this, 'get_namespace')) {
             return $this->get_namespace($hook);
@@ -21,10 +18,6 @@ trait HasHooks
 
     /**
      * Calls the callback functions that have been added to an action hook.
-     *
-     * @param string $name
-     * @param array ...$args
-     * @return void
      */
     public function action(string $hook, ...$args): void
     {
@@ -34,23 +27,15 @@ trait HasHooks
     /**
      * Calls the callback functions that have been added to a filter hook.
      *
-     * @param string $name
      * @param mixed $value
-     * @return void
      */
-    public function filter(string $hook, mixed $value)
+    public function filter(string $hook, $value)
     {
         return apply_filters($this->get_hook($hook), $value);
     }
 
     /**
      * Adds a callback to a filter hook.
-     *
-     * @param string $hook
-     * @param mixed $callback
-     * @param integer $priority
-     * @param integer $accepted_args
-     * @return void
      */
     public function add_filter(string $hook, $callback, ...$args): void
     {
@@ -64,11 +49,7 @@ trait HasHooks
     /**
      * Returns a value to a filter hook.
      *
-     * @param string $hook
      * @param mixed $value
-     * @param integer $priority
-     * @param integer $accepted_args
-     * @return void
      */
     public function add_filter_value(string $hook, $value, ...$args): void
     {
@@ -80,11 +61,7 @@ trait HasHooks
     /**
      * Adds a callback to a action hook.
      *
-     * @param string $hook
      * @param mixed $callback
-     * @param integer $priority
-     * @param integer $accepted_args
-     * @return void
      */
     public function add_action(string $hook, $callback, ...$args): void
     {

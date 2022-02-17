@@ -7,32 +7,24 @@ use Sitepilot\WpFramework\Support\ServiceProvider;
 class UpdateServiceProvider extends ServiceProvider
 {
     /**
-     * The available attributes.
-     * 
-     * Filter: <namespace>/update/<key>
-     *
-     * @var array
+     * filter: <namespace>/update/<key>
      */
-    protected $attributes = [
+    protected array $attributes = [
         'repo' => 'https://wpupdate.sitepilot.cloud/v1'
     ];
 
     /**
      * Bootstrap service provider.
-     *
-     * @return void
      */
     public function boot(): void
     {
-        $this->add_action('init', 'check_updates', 99);
+        $this->add_action('init', 'build_update_checker', 99);
     }
 
     /**
-     * Check for theme / plugin updates.
-     *
-     * @return void
+     * Build application update checker.
      */
-    public function check_updates(): void
+    public function build_update_checker(): void
     {
         $repo = trailingslashit($this->repo) . '?action=get_metadata&slug=' . $this->app->get_namespace();
 

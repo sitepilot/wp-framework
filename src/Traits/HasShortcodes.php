@@ -5,11 +5,7 @@ namespace Sitepilot\WpFramework\Traits;
 trait HasShortcodes
 {
     /**
-     * Adds a new shortcode.
-     *
-     * @param string $tag
-     * @param mixed $callback
-     * @return void
+     * @param callable|string $callback
      */
     public function add_shortcode(string $tag, $callback): void
     {
