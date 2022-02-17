@@ -1,0 +1,20 @@
+{
+    "name": "sitepilot/wp-framework",
+    "description": "WordPress theme and plugin framework by Sitepilot.",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Sitepilot\\WpFramework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nick Jansen",
+            "email": "n.jansen@sitepilot.io"
+        }
+    ],
+    "require": {
+        "yahnis-elsts/plugin-update-checker": "4.11"
+    }
+}
