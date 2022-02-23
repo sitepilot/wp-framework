@@ -3,12 +3,12 @@
 namespace Sitepilot\WpFramework\Support;
 
 use Sitepilot\WpFramework\Traits\HasHooks;
-use Sitepilot\WpFramework\Support\Application;
-use Sitepilot\WpFramework\Traits\HasAttributes;
+use Sitepilot\WpFramework\Traits\HasShortcodes;
+use Sitepilot\WpFramework\Foundation\Application;
 
 abstract class ServiceProvider
 {
-    use HasHooks, HasAttributes;
+    use HasHooks, HasShortcodes;
 
     /**
      * The application instance.
@@ -16,21 +16,54 @@ abstract class ServiceProvider
     protected Application $app;
 
     /**
-     * The service provider alias.
+     * Autoloaded service providers.
      */
-    protected string $alias;
+    protected array $providers = [];
+
+    /**
+     * Autoloaded type aliases.
+     */
+    protected array $aliases = [];
+
+    /**
+     * All of the registered register callbacks.
+     */
+    protected array $register_callbacks = [];
+
+    /**
+     * All of the registered booting callbacks.
+     */
+    protected array $booting_callbacks = [];
+
+    /**
+     * All of the registered booted callbacks.
+     */
+    protected array $booted_callbacks = [];
 
     /**
      * Create a new service provider instance.
      */
-    public function __construct(string $alias, Application $app)
+    public function __construct(Application $app)
     {
-        $this->alias = $alias;
         $this->app = $app;
+
+        $this->registered(function () {
+            foreach ($this->providers as $provider) {
+                $this->app->register($provider);
+            }
+
+            foreach ($this->aliases as $alias => $abstract) {
+                $this->app->alias($abstract, $alias);
+            }
+        });
+
+        $this->booting(function () {
+            $this->resolve_properties();
+        });
     }
 
     /**
-     * Register service providers.
+     * Register application services and filters.
      */
     public function register(): void
     {
@@ -38,18 +71,91 @@ abstract class ServiceProvider
     }
 
     /**
-     * Bootstrap service provider.
+     * Register a callback to be run after the "register" method is called.
+     *
+     * @param \Closure $callback
+     * @return void
      */
-    public function boot(): void
+    public function registered(\Closure $callback)
     {
-        //
+        $this->register_callbacks[] = $callback;
     }
 
     /**
-     * Get service provider namespace.
+     * Register a callback to be run before the "boot" method is called.
+     *
+     * @param \Closure $callback
+     * @return void
      */
-    public function get_namespace(string $path = '', string $separator = '/'): string
+    public function booting(\Closure $callback)
     {
-        return $this->app->get_namespace($this->alias . ($path ?  $separator . $path : ''), $separator);
+        $this->booting_callbacks[] = $callback;
+    }
+
+    /**
+     * Register a callback to be run after the "boot" method is called.
+     *
+     * @param \Closure $callback
+     * @return void
+     */
+    public function booted(\Closure $callback)
+    {
+        $this->booted_callbacks[] = $callback;
+    }
+
+    /**
+     * Call the register callbacks.
+     */
+    public function call_register_callbacks(): void
+    {
+        foreach ($this->register_callbacks as $callback) {
+            $this->app->call($callback);
+        }
+    }
+
+    /**
+     * Call the booting callbacks.
+     */
+    public function call_booting_callbacks(): void
+    {
+        foreach ($this->booting_callbacks as $callback) {
+            $this->app->call($callback);
+        }
+    }
+
+    /**
+     * Call the booted callbacks.
+     */
+    public function call_booted_callbacks(): void
+    {
+        foreach ($this->booted_callbacks as $callback) {
+            $this->app->call($callback);
+        }
+    }
+
+    /**
+     * Proxy to app namespace.
+     */
+    public function namespace(string $path = '', string $separator = '/'): string
+    {
+        return $this->app->namespace($path, $separator);
+    }
+
+    /**
+     * Automatically resolve typed properties.
+     */
+    public function resolve_properties(): void
+    {
+        $reflection = new \ReflectionClass(get_called_class());
+
+        foreach ($reflection->getProperties(\ReflectionProperty::IS_PROTECTED) as $property) {
+            if (
+                $property->getType()
+                && empty($this->{$property->getName()})
+                && !$property->getType()->isBuiltin()
+            ) {
+                $this->{$property->getName()} = $this->app->get($property->getType()->getName());
+            }
+        }
     }
 }

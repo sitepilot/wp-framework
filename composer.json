@@ -15,6 +15,7 @@
         }
     ],
     "require": {
+        "psr/container": "^1.0",
         "yahnis-elsts/plugin-update-checker": "4.11"
     }
 }

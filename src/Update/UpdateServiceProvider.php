@@ -6,15 +6,18 @@ use Sitepilot\WpFramework\Support\ServiceProvider;
 
 class UpdateServiceProvider extends ServiceProvider
 {
-    /**
-     * filter: <namespace>/update/<key>
-     */
-    protected array $attributes = [
-        'repo' => 'https://wpupdate.sitepilot.cloud/v1'
-    ];
+    protected Update $update;
 
     /**
-     * Bootstrap service provider.
+     * Register application services.
+     */
+    public function register(): void
+    {
+        $this->app->alias(Update::class, 'update');
+    }
+
+    /**
+     * Bootstrap application services and hooks.
      */
     public function boot(): void
     {
@@ -22,16 +25,16 @@ class UpdateServiceProvider extends ServiceProvider
     }
 
     /**
-     * Build application update checker.
+     * Build the update checker.
      */
     public function build_update_checker(): void
     {
-        $repo = trailingslashit($this->repo) . '?action=get_metadata&slug=' . $this->app->get_namespace();
+        $repo = trailingslashit($this->update->repo()) . '?action=get_metadata&slug=' . $this->update->slug();
 
         \Puc_v4_Factory::buildUpdateChecker(
             $repo,
-            $this->app->file,
-            $this->app->get_namespace()
+            $this->update->file(),
+            $this->update->slug()
         );
     }
 }

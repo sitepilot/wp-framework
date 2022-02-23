@@ -5,23 +5,11 @@ namespace Sitepilot\WpFramework\Traits;
 trait HasHooks
 {
     /**
-     * Get namespaced hook name.
-     */
-    public function get_hook(string $hook): string
-    {
-        if (method_exists($this, 'get_namespace')) {
-            return $this->get_namespace($hook);
-        }
-
-        return $this->app->get_namespace($hook);
-    }
-
-    /**
      * Calls the callback functions that have been added to an action hook.
      */
     public function action(string $hook, ...$args): void
     {
-        do_action($this->get_hook($hook), ...$args);
+        do_action($this->namespace($hook), ...$args);
     }
 
     /**
@@ -31,7 +19,7 @@ trait HasHooks
      */
     public function filter(string $hook, $value)
     {
-        return apply_filters($this->get_hook($hook), $value);
+        return apply_filters($this->namespace($hook), $value);
     }
 
     /**
@@ -59,7 +47,7 @@ trait HasHooks
     }
 
     /**
-     * Adds a callback to a action hook.
+     * Adds a callback to an action hook.
      *
      * @param mixed $callback
      */
